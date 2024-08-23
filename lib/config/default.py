@@ -13,7 +13,6 @@ import os
 from yacs.config import CfgNode as CN
 # from .model import MODEL_EXTRAS
 from .model_cfg import MODEL_EXTRAS
-
 _C = CN()
 
 _C.DATA_DIR = ''

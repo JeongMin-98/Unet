@@ -7,12 +7,12 @@
 # from model.model import check_model_build, run_visualize_feature_map_func, DeepNetwork
 import argparse
 
-
+import torch
 from torchinfo import summary
-
+from torchviz import make_dot
 # The import statement below will be refactored soon.
 import _init_path
-from model import get_fcn
+from model import get_fcn, get_UNet
 from config import cfg
 from config import update_config
 from utils.tools import check_device
@@ -58,19 +58,21 @@ def parse_args():
 def run_fn(config):
     device = check_device()
 
+    # # init model
+    # model = get_fcn(config, is_train=True)
+    #
+    # model_stat = summary(model,
+    #                      input_size=(1, 784),
+    #                      device='cuda',
+    #                      verbose=1,
+    #                      col_width=16,
+    #                      col_names=["kernel_size", "output_size", "num_params", "mult_adds"],
+    #                      row_settings=["var_names"])
     # init model
-    model = get_fcn(config, is_train=True)
-
-    model_stat = summary(model,
-                         input_size=(1, 784),
-                         device='cuda',
-                         verbose=1,
-                         col_width=16,
-                         col_names=["kernel_size", "output_size", "num_params", "mult_adds"],
-                         row_settings=["var_names"])
-
-
-"""main"""
+    model = get_UNet(config, is_train=True)
+    input_tensor = torch.randn(1, 1, 224, 224)
+    output = model(input_tensor)
+    make_dot(output, params=dict(model.named_parameters())).render("model_structure", format="png")
 
 
 def main():
