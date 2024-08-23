@@ -22,7 +22,7 @@ class ConvBlock(nn.Module):
         self.out_channels = out_channels
 
         self.conv_block = nn.Sequential(
-            nn.Conv2d(self.in_channels, self.out_channels, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.Conv2d(self.in_channels, self.out_channels, kernel_size=3, padding=1, bias=False),
             nn.BatchNorm2d(self.out_channels),
             nn.ReLU(inplace=True),
         )
@@ -115,6 +115,42 @@ class UNet(nn.Module):
         self.n_classes = n_classes
         self.bilinear = bilinear
 
+        # Contracting Path
         self.input_features = DoubleConv(n_channels, 64)
-        self.down1 = Down(64, 128)
-        self.down2 = Down(128, 256)
+        out_channel = 64
+        self.contracting_path = []
+        for i in range(1, 5):
+            in_channel = out_channel
+            out_channel = out_channel * 2
+            self.contracting_path.append(Down(in_channel, out_channel))
+        # self.down1 = Down(64, 128)
+        # self.down2 = Down(128, 256)
+        # self.down3 = Down(256, 512)
+        # self.down4 = Down(512, 1024)
+
+        # Expansive Path
+        self.expansive_path = []
+        for i in range(1, 5):
+            in_channel = out_channel
+            out_channel = out_channel // 2
+            self.expansive_path.append(Up(in_channel, out_channel))
+        # self.up1 = Up(1024, 512)
+        # self.up2 = Up(512, 256)
+        # self.up3 = Up(256, 128)
+        # self.up4 = Up(128, 64)
+        self.output = DoubleConv(128, 64)
+        self.segmentor = Conv1x1(64, n_classes)
+
+    def forward(self, x):
+        ipt = self.input_features.forward(x)
+        compress_layer_output = [ipt]
+        for i in range(4):
+            compress_layer_output.append(self.contracting_path[i].forward(compress_layer_output[-1]))
+
+        expansive_layer_output = compress_layer_output[-1]
+        for i in range(3):
+            expansive_layer_output = self.expansive_path[i].forward(expansive_layer_output,
+                                                                    compress_layer_output[3 - i])
+        output_feature = self.output.forward(expansive_layer_output)
+        logits = self.segmentor.forward(output_feature)
+        return logits
