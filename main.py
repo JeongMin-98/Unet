@@ -70,7 +70,7 @@ def run_fn(config):
     #                      row_settings=["var_names"])
     # init model
     model = get_UNet(config, is_train=True)
-    input_tensor = torch.randn(1, 1, 224, 224)
+    input_tensor = torch.randn(1, 1, 30, 30)
     output = model(input_tensor)
     make_dot(output, params=dict(model.named_parameters())).render("model_structure", format="png")
 
