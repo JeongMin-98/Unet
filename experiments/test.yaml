@@ -5,7 +5,7 @@ CUDNN:
 DATASET:
   DATA_FORMAT: jpg
   DATA_TYPE: Unet
-  ROOT: ./data
+  ROOT: ./data/jointpatch/testcoco
   SCALE_FACTOR: 1
   TEST_SET: valid
   TRAIN_SET: train
@@ -22,7 +22,7 @@ MODEL:
     INPUT_CHANNELS: 784
     OUTPUT_ACTIVATION: logSoftMax
     OUTPUT_CHANNELS: 2
-  IMAGE_SIZE: 30
+  IMAGE_SIZE: [256, 256]
   INIT_WEIGHTS: True
   NAME: FCN
   PRETRAINED: 

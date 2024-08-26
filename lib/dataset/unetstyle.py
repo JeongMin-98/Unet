@@ -12,12 +12,9 @@ from dataset.XrayDataset import XrayDataset
 from functools import partial
 from multiprocessing import Pool
 from tqdm import tqdm
-from PIL import Image
 from pathlib import Path
 
-
-def load_image(filename):
-    return Image.open(filename)
+from utils.tools import load_image
 
 
 def unique_mask_values(idx, mask_dir):
@@ -61,3 +58,34 @@ class UNetStyleDataset(XrayDataset):
 
         self.maks_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
         logging.info(f"Unique mask value: {self.maks_values}")
+        
+        self.image_db, self.mask_db = self._get_db()
+        
+        logging.info(f"Load {len(self.image_db)} samples")
+
+    def _get_db(self):
+        if self.is_train:
+            # use ground truth mask.
+            gt_img_db, gt_mask_db = self._load_img_and_mask()
+        else:
+            # inference
+            pass
+    
+        return gt_img_db, gt_mask_db
+    
+    def _load_img_and_mask(self):
+        gt_img_db, gt_mask_db = [], []
+        for idx in self.ids:
+            # file format use(wip)
+            mask_file_path = osp.join(self.mask_dir, f"{idx}_mask.png")
+            img_file_path = osp.join(self.image_dir, f"{idx}.jpg")
+            
+            gt_img_db.append(img_file_path)
+            gt_mask_db.append(mask_file_path)
+        
+        return gt_img_db, gt_mask_db
+    
+                
+            
+            
+            

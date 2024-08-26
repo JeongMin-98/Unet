@@ -173,7 +173,7 @@ def parse_model_config(config_path):
                 module_configs[-1][key.rstrip()] = value.strip()
 
     return module_configs
-
+    
 
 """ If you want visualize_inference to fit your model, you need to implement below func."""
 
@@ -242,3 +242,7 @@ def mnist_transform():
         transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], inplace=True)
     ]
     return transforms.Compose(transforms_list)
+
+
+def load_image(filename):
+    return Image.open(filename)

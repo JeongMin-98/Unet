@@ -34,7 +34,7 @@ _C.MODEL.NAME = 'FCN'
 _C.MODEL.EXTRA = MODEL_EXTRAS[_C.MODEL.NAME]
 _C.MODEL.INIT_WEIGHTS = True
 _C.MODEL.PRETRAINED = ''
-_C.MODEL.IMAGE_SIZE = 30
+_C.MODEL.IMAGE_SIZE = [256, 256]
 
 # if you want to add new params for NETWORK, Init new Params below!
 
