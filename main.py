@@ -6,6 +6,7 @@
 #
 # from model.model import check_model_build, run_visualize_feature_map_func, DeepNetwork
 import argparse
+import pprint
 
 import torch
 from torchinfo import summary
@@ -16,7 +17,7 @@ from model import get_fcn, get_UNet
 from dataset.unetstyle import UNetStyleDataset
 from config import cfg
 from config import update_config
-from utils.tools import check_device
+from utils.tools import check_device, create_logger
 
 
 def parse_args():
@@ -86,7 +87,11 @@ def main():
 
     # logger
     # create logger
-
+    logger = create_logger(cfg, args.cfg, 'train')
+    
+    logger.info(pprint.pformat(args))
+    logger.info(pprint.pformat(cfg))
+    
     # run
     run_fn(cfg)
     # check_model_build(args=args)

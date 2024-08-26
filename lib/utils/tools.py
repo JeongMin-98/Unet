@@ -36,8 +36,8 @@ def create_logger(cfg, cfg_name, phase='train'):
     cfg_name = os.path.basename(cfg_name).split('.')[0]
     final_output_dir = root_output_dir / dataset / model / cfg_name
     
-    print(" creating {}".fromat(final_output_dir))
-    final_output_dir.mkdir(parent=True, exist_ok=True)
+    print(" creating {}".format(final_output_dir))
+    final_output_dir.mkdir(parents=True, exist_ok=True)
     
     time_str = time.strftime('%Y-%m-%d-%H-%M')
     log_file = f'{cfg_name}_{time_str}_{phase}'

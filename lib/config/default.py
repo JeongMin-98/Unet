@@ -16,7 +16,7 @@ from .model_cfg import MODEL_EXTRAS
 _C = CN()
 
 _C.DATA_DIR = ''
-_C.OUTPUT_DIR = ''
+_C.OUTPUT_DIR = './output'
 _C.LOG_DIR = ''
 _C.GPUS = 0
 _C.WORKERS = 4
