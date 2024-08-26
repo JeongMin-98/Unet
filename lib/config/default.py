@@ -34,15 +34,18 @@ _C.MODEL.NAME = 'FCN'
 _C.MODEL.EXTRA = MODEL_EXTRAS[_C.MODEL.NAME]
 _C.MODEL.INIT_WEIGHTS = True
 _C.MODEL.PRETRAINED = ''
+_C.MODEL.IMAGE_SIZE = 30
 
 # if you want to add new params for NETWORK, Init new Params below!
 
 # DATASET related params
 _C.DATASET = CN()
-_C.DATASET.ROOT = ''
+_C.DATASET.DATA_TYPE = 'Unet'
+_C.DATASET.ROOT = './data'
 _C.DATASET.TRAIN_SET = 'train'
 _C.DATASET.TEST_SET = 'valid'
 _C.DATASET.DATA_FORMAT = 'jpg'
+_C.DATASET.SCALE_FACTOR = 1
 
 # training data augmentation
 # Implement your data augmentation
@@ -113,6 +116,9 @@ def update_config(cfg, args):
 
 if __name__ == '__main__':
     import sys
+    from model_cfg import MODEL_EXTRAS
 
     with open(sys.argv[1], 'w') as f:
         print(_C, file=f)
+
+
