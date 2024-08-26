@@ -1,7 +1,10 @@
 import torch
+import logging
+import time
 import os, re
 import numpy as np
 from PIL import Image
+from pathlib import Path
 import matplotlib.pyplot as plt
 from torchvision import transforms
 
@@ -20,6 +23,35 @@ def check_folder(log_dir):
         os.makedirs(log_dir)
     return log_dir
 
+
+def create_logger(cfg, cfg_name, phase='train'):
+    root_output_dir = Path(cfg.OUTPUT_DIR)
+    
+    if not root_output_dir.exists():
+        print(f"Createing {root_output_dir}")
+        root_output_dir.mkdir()
+    
+    dataset = cfg.DATASET.DATA_TYPE + "_" 
+    model = cfg.MODEL.NAME
+    cfg_name = os.path.basename(cfg_name).split('.')[0]
+    final_output_dir = root_output_dir / dataset / model / cfg_name
+    
+    print(" creating {}".fromat(final_output_dir))
+    final_output_dir.mkdir(parent=True, exist_ok=True)
+    
+    time_str = time.strftime('%Y-%m-%d-%H-%M')
+    log_file = f'{cfg_name}_{time_str}_{phase}'
+    final_log_file = final_output_dir / log_file
+    head = '%(asctime) - 15s %(message)s'
+    logging.basicConfig(filename=str(final_log_file), format=head)
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    console = logging.StreamHandler()
+    logging.getLogger('').addHandler(console)
+    
+    # tensorboard part.
+    
+    return logger
 
 def find_latest_ckpt(folder):
     """ find latest checkpoint """
