@@ -13,6 +13,7 @@ from torchviz import make_dot
 # The import statement below will be refactored soon.
 import _init_path
 from model import get_fcn, get_UNet
+from dataset.unetstyle import UNetStyleDataset
 from config import cfg
 from config import update_config
 from utils.tools import check_device
@@ -68,11 +69,15 @@ def run_fn(config):
     #                      col_width=16,
     #                      col_names=["kernel_size", "output_size", "num_params", "mult_adds"],
     #                      row_settings=["var_names"])
+
+    # dataset
+    UNetStyleDataset(config, '', '', True)
+
     # init model
-    model = get_UNet(config, is_train=True)
-    input_tensor = torch.randn(1, 1, 30, 30)
-    output = model(input_tensor)
-    make_dot(output, params=dict(model.named_parameters())).render("model_structure", format="png")
+    # model = get_UNet(config, is_train=True)
+    # input_tensor = torch.randn(1, 1, 30, 30)
+    # output = model(input_tensor)
+    # make_dot(output, params=dict(model.named_parameters())).render("model_structure", format="png")
 
 
 def main():
